@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { addProject } from "@/lib/projects";
-import { getRepoData } from "@/lib/github";
+import { getRepoData } from "@/github/github";
 
 export default function AddProjectForm() {
   const [form, setForm] = useState({
@@ -69,7 +69,7 @@ export default function AddProjectForm() {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-6 bg-white rounded-xl shadow-md">
+    <div className="max-w-xl mx-auto p-6 bg-black rounded-xl shadow-md">
       <h2 className="text-xl font-bold mb-4">Add Project from GitHub</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
