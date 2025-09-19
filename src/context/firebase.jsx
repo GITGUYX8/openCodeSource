@@ -1,3 +1,4 @@
+"use client"
 import { createContext, useContext } from "react";
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
