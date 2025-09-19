@@ -74,4 +74,3 @@ export async function getRepoData(owner, repo) {
       return null;
     }
   }
-  
