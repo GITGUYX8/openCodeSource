@@ -27,3 +27,32 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Roaming lights animations */
+@keyframes roam1 {
+  0%   { transform: translate(0,0); }
+  25%  { transform: translate(50px, -30px); }
+  50%  { transform: translate(-40px, 40px); }
+  75%  { transform: translate(30px, 20px); }
+  100% { transform: translate(0,0); }
+}
+
+@keyframes roam2 {
+  0%   { transform: translate(0,0); }
+  25%  { transform: translate(-30px, 40px); }
+  50%  { transform: translate(50px, -20px); }
+  75%  { transform: translate(-20px, -30px); }
+  100% { transform: translate(0,0); }
+}
+
+@keyframes roam3 {
+  0%   { transform: translate(0,0); }
+  25%  { transform: translate(-40px, 20px); }
+  50%  { transform: translate(30px, -50px); }
+  75%  { transform: translate(-10px, 30px); }
+  100% { transform: translate(0,0); }
+}
+
+.animate-roam1 { animation: roam1 15s ease-in-out infinite; }
+.animate-roam2 { animation: roam2 20s ease-in-out infinite; }
+.animate-roam3 { animation: roam3 18s ease-in-out infinite; }
