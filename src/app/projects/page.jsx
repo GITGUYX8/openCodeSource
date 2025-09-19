@@ -1,5 +1,4 @@
 "use client";
-import "../app/globals.css";
 import React, { useEffect, useState } from "react";
 import ProjectCard from "@/components/ProjectCard";
 import { readAllDataFromCollection } from "@/firestore/page";
