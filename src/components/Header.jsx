@@ -20,7 +20,7 @@ export default function Header() {
         <Link href="/" className="flex items-center gap-2">
           <Code className="h-6 w-6 text-blue-600" />
           <span className="hidden text-lg font-bold text-zinc-900 dark:text-zinc-100 sm:inline-block">
-            OpenSource Campus
+            OpenSourceCode
           </span>
         </Link>
         <nav className="hidden items-center gap-6 md:flex">
