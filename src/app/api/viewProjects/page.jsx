@@ -125,8 +125,8 @@ export default function ProjectsPage() {
           onChange={(e) => setSortOption(e.target.value)}
           className="px-4 py-2 rounded-xl bg-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-white/20 transition w-full md:w-1/4"
         >
-          <option value="date" className="text-black">Sort by Date</option>
-          <option value="bounty" className="text-black">Sort by Bounty</option>
+          <option value="date">Sort by Date</option>
+          <option value="bounty">Sort by Bounty</option>
         </select>
       </div>
 
@@ -150,7 +150,6 @@ export default function ProjectsPage() {
               contributors={project.contributors}
               prs={project.prs}
               posted={project.posted}
-              githubUrl={project.githubUrl}
             />
           ))}
         </div>

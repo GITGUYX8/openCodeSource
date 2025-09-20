@@ -14,7 +14,9 @@ export default function ProjectCard({
     contributors,
     prs,
     posted,
+    githubUrl
     }) {
+      console.log(githubUrl)
     return (
       <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-sm overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300 ease-in-out max-w-md flex flex-col">
         {/* Image */}
@@ -59,7 +61,7 @@ export default function ProjectCard({
             <span className="bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300 px-3 py-1 rounded-full text-xs font-semibold">
               {bounty}
             </span>
-            <a href="#" className="bg-zinc-800 text-white dark:bg-zinc-50 dark:text-zinc-900 hover:bg-zinc-700 dark:hover:bg-zinc-200 text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
+            <a href={githubUrl} target="_blank" rel="noopener noreferrer" className="bg-zinc-800 text-white dark:bg-zinc-50 dark:text-zinc-900 hover:bg-zinc-700 dark:hover:bg-zinc-200 text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
               View Project
             </a>
           </div>
