@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6.32.2",
     "@headlessui/react": "^2.2.8",
     "@heroicons/react": "^2.2.0",
     "firebase": "^12.3.0",

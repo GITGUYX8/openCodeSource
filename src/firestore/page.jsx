@@ -42,11 +42,11 @@ export const readAllDataFromCollection = async (collectionName) => {
     }
 };
 
-export const dataByQuery = async () => {
+export const dataByQuery = async (queryTitle, queryEntry) => {
     // Note: Your query was for author === true in the 'cities' collection.
     // This might be a placeholder. I'll leave it as is.
-    const collectionRef = collection(firestore, "cities");
-    const q = query(collectionRef, where("author", "==", "Priya Sharma" ));
+    const collectionRef = collection(firestore, "entries");
+    const q = query(collectionRef, where(queryTitle, "==", queryEntry));
     const querySnapshot = await getDocs(q);
     const results = [];
     querySnapshot.forEach(doc => results.push({ id: doc.id, ...doc.data() }));
