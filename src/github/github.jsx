@@ -52,7 +52,7 @@ export async function getRepoData(owner, repo) {
       );
       const prs = prsRes.ok ? await prsRes.json() : [];
       const prCount = Array.isArray(prs) ? prs.length : 0;
-  
+      console.log("repodata",repoData)
       // Return merged object
       return {
         entry: Date.now().toString(),

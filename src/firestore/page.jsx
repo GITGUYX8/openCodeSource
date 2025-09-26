@@ -42,15 +42,16 @@ export const readAllDataFromCollection = async (collectionName) => {
     }
 };
 
-export const dataByQuery = async () => {
+export const dataByQuery = async (queryTitle, queryEntry) => {
     // Note: Your query was for author === true in the 'cities' collection.
     // This might be a placeholder. I'll leave it as is.
-    const collectionRef = collection(firestore, "cities");
-    const q = query(collectionRef, where("author", "==", "Priya Sharma" ));
+    const collectionRef = collection(firestore, "entries");
+    const q = query(collectionRef, where(queryTitle, "==", queryEntry));
+    // const q = query(collectionRef, where("author", "==", true ));
     const querySnapshot = await getDocs(q);
     const results = [];
     querySnapshot.forEach(doc => results.push({ id: doc.id, ...doc.data() }));
-    console.log("Query results:", results);
+    // console.log("Query results:", results);
     return results;
 };
 
@@ -81,7 +82,7 @@ export function FirestoreData() {
             <h1>firestore</h1>
 
             <button onClick={() => writeData(repoData)} className="bg-amber-700 rounded-2xl p-2">Put data</button>
-            <button onClick={() => readAllDataFromCollection("entries")} className="bg-amber-700 rounded-2xl p-2">get data</button>
+            <button onClick={() => readAllDataFromCollection("userPorfile")} className="bg-amber-700 rounded-2xl p-2">get data</button>
             <button onClick={dataByQuery} className="bg-amber-700 rounded-2xl p-2">get data by query</button>
             <button onClick={() => updateData('qgvSaZRYEMQIcizdjQsN', { name: "New Delhi" })} className="bg-amber-700 rounded-2xl p-2">update data</button>
         </div>
