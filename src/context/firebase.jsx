@@ -1,8 +1,6 @@
 "use client";
 import { createContext, useContext } from "react";
 import { initializeApp } from "firebase/app";
-// import { getAuth } from "firebase/auth";
-// import { signinUser, signupUser, signinGoogle } from "@/auth/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -18,9 +16,6 @@ const firebaseConfig = {
 
 
 export const firebaseApp = initializeApp(firebaseConfig);
-
-
-// export const firebaseAuth = getAuth(firebaseApp);
 export const firestore = getFirestore(firebaseApp);  
 
 
