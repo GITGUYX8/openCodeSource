@@ -61,6 +61,7 @@ export default function AddProjectForm() {
 
       const projectData = {
         ...repoData,
+        Name: "" ,
         college: form.college,
         year: form.year,
         bounty: form.bounty,

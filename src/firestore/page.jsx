@@ -50,7 +50,7 @@ export const dataByQuery = async (queryTitle, queryEntry) => {
     const querySnapshot = await getDocs(q);
     const results = [];
     querySnapshot.forEach(doc => results.push({ id: doc.id, ...doc.data() }));
-    console.log("Query results:", results);
+    // console.log("Query results:", results);
     return results;
 };
 
@@ -81,7 +81,7 @@ export function FirestoreData() {
             <h1>firestore</h1>
 
             <button onClick={() => writeData(repoData)} className="bg-amber-700 rounded-2xl p-2">Put data</button>
-            <button onClick={() => readAllDataFromCollection("entries")} className="bg-amber-700 rounded-2xl p-2">get data</button>
+            <button onClick={() => readAllDataFromCollection("userPorfile")} className="bg-amber-700 rounded-2xl p-2">get data</button>
             <button onClick={dataByQuery} className="bg-amber-700 rounded-2xl p-2">get data by query</button>
             <button onClick={() => updateData('qgvSaZRYEMQIcizdjQsN', { name: "New Delhi" })} className="bg-amber-700 rounded-2xl p-2">update data</button>
         </div>
