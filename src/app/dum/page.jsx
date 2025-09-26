@@ -1,6 +1,7 @@
 "use client"
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { readAllDataFromCollection } from "@/firestore/page";
+import EscrowFormBtn from "@/components/bountyBtn";
 // This is a React Server Component, so server-side code can run directly.
 async function getGeminiResponse() {
   try {
@@ -20,6 +21,7 @@ export default async function DumPage() {
   const aiResponse = await getGeminiResponse();
   return (
     <div className="p-8">
+      <EscrowFormBtn/>
       <h1 className="text-2xl font-bold mb-4">Gemini Response:</h1>
       <p className="bg-zinc-100 dark:bg-zinc-800 p-4 rounded-lg">{aiResponse}</p>
     </div>

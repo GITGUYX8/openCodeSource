@@ -5,6 +5,7 @@ import { dataByQuery } from "@/firestore/page";
 import { Star, Users, GitPullRequest, Github, ExternalLink, Calendar, Code, Award, School } from "lucide-react";
 import Link from "next/link";
 import CommunityChat from "@/components/CommunityChat";
+import EscrowFormBtn from "@/components/bountyBtn";
 
 export default function ProjectDescriptionPage() {
   const searchParams = useSearchParams();
@@ -22,6 +23,7 @@ export default function ProjectDescriptionPage() {
       };
       setLoading(true);
       const dataQ = await dataByQuery("title", title);
+
       if (dataQ && dataQ.length > 0) {
         setProjectData(dataQ[0]);
       }
@@ -95,7 +97,6 @@ export default function ProjectDescriptionPage() {
             <ChatInput onSend={handleChat} />
           </div>
         </div>
-
         {/* Sidebar */}
         <div className="space-y-6">
           <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
@@ -111,6 +112,11 @@ export default function ProjectDescriptionPage() {
                 <Link href={githubUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 w-full bg-zinc-800 hover:bg-zinc-700 text-white font-semibold px-4 py-2 rounded-lg transition-colors">
                     <Github size={18} /> View on GitHub
                 </Link>
+                <EscrowFormBtn
+                  // Parse the numeric value from the bounty string (e.g., "₹5000" -> 5000)
+                  inrBounty={bounty ? Number(bounty.replace(/[^0-9.]/g, "")) : 0}
+                  projectTitle={title}
+                />
             </div>
           </div>
 
