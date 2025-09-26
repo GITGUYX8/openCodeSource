@@ -23,6 +23,7 @@ function SignupPage() {
   };
 
   return (
+    
     <main className="flex items-center justify-center min-h-[calc(100vh-8rem)] px-4">
       <div className="w-full max-w-md p-8 space-y-6 bg-zinc-900/80 backdrop-blur-sm rounded-xl shadow-lg">
         <h1 className="text-3xl font-bold text-center text-white">

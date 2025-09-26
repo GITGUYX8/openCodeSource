@@ -19,7 +19,6 @@ export const firebaseApp = initializeApp(firebaseConfig);
 export const firebaseAuth = getAuth(firebaseApp);
 
 const FirebaseContext = createContext(null);
-
 export const useFirebase = () => useContext(FirebaseContext)
 export const FirebaseProvider = (props) => {
     

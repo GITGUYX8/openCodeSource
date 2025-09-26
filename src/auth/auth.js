@@ -1,3 +1,4 @@
+
 import {createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signInWithRedirect   }  from "firebase/auth"
 import { firebaseAuth } from "@/context/firebase";
 export const  signupUser = (email, password) => {
@@ -17,7 +18,7 @@ export const signinGoogle = async () => {
   provider.setCustomParameters({ prompt: 'select_account' });
 
   try {
-    const result = await signInWithRedirect(firebaseAuth, provider);
+    const result = await signInWithPopup(firebaseAuth, provider);
     console.log("Google Sign-in successful:", result.user);
   } catch (error) {
     if (error.code === "auth/popup-closed-by-user") {
