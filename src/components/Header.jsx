@@ -19,8 +19,6 @@ export default function Header() {
     { href: "/", label: "Home" },
     { href: "/projects", label: "Projects" },
     { href: "/about", label: "About" },
-    { href: "/addProject", label: "Add Project" },
-    { href: "/userProfile", label: "Your Profile" }
   ];
 
   return (
@@ -47,6 +45,30 @@ export default function Header() {
               {link.label}
             </Link>
           ))}
+          <SignedIn>
+            <Link
+              key="/addProject"
+              href="/addProject"
+              className={`text-sm font-medium transition-colors ${
+                pathname === "/addProject"
+                  ? "text-zinc-900 dark:text-zinc-50"
+                  : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+              }`}
+            >
+              Add Project
+            </Link>
+            <Link
+              key="/userProfile"
+              href="/userProfile"
+              className={`text-sm font-medium transition-colors ${
+                pathname === "/userProfile"
+                  ? "text-zinc-900 dark:text-zinc-50"
+                  : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+              }`}
+            >
+              Your Profile
+            </Link>
+          </SignedIn>
         </nav>
         <div className="flex items-center gap-4">
           <SignedOut>

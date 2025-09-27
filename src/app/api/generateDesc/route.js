@@ -35,12 +35,23 @@ export async function GET(req) {
 
     // Use Gemini to generate summary
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-    const result = await model.generateContent(
-      `Summarize this GitHub README in a concise and contributor-friendly way:
-      `
-    );
-    // \n\n${readme}
-    console.log("result: ",result)
+    const prompt = `
+You are an expert project manager and developer advocate. Your goal is to create a summary of a GitHub project's README file that is both informative for potential users and encouraging for new contributors.
+
+Based on the following README content, please generate a summary in Markdown format.
+
+The summary should include:
+1.  **Project Overview**: A brief, one-sentence description of what the project does.
+2.  **Tech Stack**: A list of the key technologies and languages used, if mentioned.
+3.  **Getting Started**: A very short, high-level guide on how to set up the project locally.
+4.  **How to Contribute**: A welcoming message encouraging contributions and pointing out how someone can start (e.g., "Look for 'good first issue' labels").
+
+Here is the README content:
+---
+${readme}
+---
+`;
+    const result = await model.generateContent(prompt);
     return NextResponse.json({ summary: result.response.text() });
   } catch (err) {
     console.error("AI Summary Error:", err);

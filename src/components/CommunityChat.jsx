@@ -9,7 +9,18 @@
  
  export default function CommunityChat({ projectId }) {
    const { user } = useUser(); // Get the current logged-in user from Clerk
-   const [comments, setComments] = useState([]);
+   const [comments, setComments] = useState([
+     {
+       author: "Alice",
+       text: "This looks like a great project to contribute to! The AI summary is super helpful.",
+       timestamp: { toDate: () => new Date(Date.now() - 1000 * 60 * 15) } // 15 minutes ago
+     },
+     {
+       author: "Bob",
+       text: "I agree! I'm looking at the 'good first issue' labels on GitHub right now. The PR templates will be useful.",
+       timestamp: { toDate: () => new Date(Date.now() - 1000 * 60 * 8) } // 8 minutes ago
+     }
+   ]);
    const [newComment, setNewComment] = useState("");
    const [loading, setLoading] = useState(true);
  
@@ -21,7 +32,10 @@
      // Listen for real-time updates on the project document
      const unsubscribe = onSnapshot(projectRef, (doc) => {
        if (doc.exists()) {
-         setComments(doc.data().comments || []);
+         const firestoreComments = doc.data().comments || [];
+         if (firestoreComments.length > 0) {
+           setComments(firestoreComments);
+         }
        } else {
          console.log("No such document!");
        }
@@ -60,7 +74,7 @@
    }
  
    return (
-     <div className="border rounded-xl p-4 bg-white dark:bg-zinc-900 mt-8">
+     <div className="bg-black/30 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl shadow-blue-500/10 p-6">
        <h2 className="text-xl font-semibold mb-4">Community Discussion</h2>
        <div className="space-y-4 max-h-96 overflow-y-auto pr-2">
          {comments.length > 0 ? (
@@ -68,10 +82,10 @@
              .sort((a, b) => b.timestamp.toDate() - a.timestamp.toDate())
              .map((comment, index) => (
                <div key={index} className="flex items-start gap-3">
-                 <div className="h-9 w-9 rounded-full bg-zinc-200 dark:bg-zinc-700 flex items-center justify-center text-sm font-bold shrink-0">
+                 <div className="h-9 w-9 rounded-full bg-neutral-700 flex items-center justify-center text-sm font-bold shrink-0 border border-white/10">
                    {comment.author.charAt(0)}
                  </div>
-                 <div className="bg-zinc-100 dark:bg-zinc-800 p-3 rounded-lg w-full">
+                 <div className="bg-black/20 p-3 rounded-lg w-full">
                    <div className="flex justify-between items-center">
                      <p className="font-semibold text-sm text-zinc-800 dark:text-zinc-200">
                        {comment.author}
@@ -94,16 +108,16 @@
        </div>
  
        {user ? (
-         <form onSubmit={handlePostComment} className="flex gap-2 mt-4 pt-4 border-t border-zinc-200 dark:border-zinc-800">
+         <form onSubmit={handlePostComment} className="flex gap-3 mt-4 pt-4 border-t border-white/10">
            <input
              value={newComment}
              onChange={(e) => setNewComment(e.target.value)}
-             className="flex-1 border rounded-lg px-3 py-2 dark:bg-zinc-800 dark:text-zinc-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+             className="flex-1 px-4 py-2 rounded-xl bg-white/10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-white/20 transition"
              placeholder="Leave a comment..."
            />
            <button
              type="submit"
-             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors disabled:bg-zinc-500"
+             className="bg-blue-600 text-white font-semibold px-4 py-2 rounded-xl hover:bg-blue-500 transition-colors disabled:bg-zinc-500"
              disabled={!newComment.trim()}
            >
              Post
