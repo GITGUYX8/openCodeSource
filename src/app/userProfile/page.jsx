@@ -12,7 +12,7 @@ import {
 } from "firebase/firestore";
 import { firestore, firebaseApp } from "@/context/firebase";
 import { FaGithub, FaLinkedin, FaStar, FaCodeBranch } from "react-icons/fa";
-import { GitPullRequest, DollarSign, Code } from "lucide-react";
+import { GitPullRequest, IndianRupee, Code } from "lucide-react";
 
 export default function UserProfile() {
   const db = getFirestore(firebaseApp);
@@ -33,6 +33,8 @@ export default function UserProfile() {
   const [activeTab, setActiveTab] = useState("Your projects");
   const [yourProjects, setYourProjects] = useState([]);
   const [contributingProjects, setContributingProjects] = useState([]);
+ 
+  const [projectDel,setProjectDel] = useState(false);
 
   // ✅ Load profile from localStorage
   useEffect(() => {
@@ -103,7 +105,7 @@ export default function UserProfile() {
   }, [profile]);
 
   // ✅ Delete project
-  const deleteProject = async (projectId) => {
+  useEffect( async (projectId) =>{
     try {
       await deleteDoc(doc(firestore, "entries", projectId));
       setYourProjects((prev) => prev.filter((p) => p.id !== projectId));
@@ -111,15 +113,16 @@ export default function UserProfile() {
     } catch (err) {
       console.error("Error deleting project:", err);
     }
-  };
+    setProjectDel(true);
+  },[]);
 
   // --- Delete profile
-  const deleteProfile = async () => {
+  useEffect(async () => {
     localStorage.removeItem("userProfile");
     setProfile(null);
     setYourProjects([]);
     setContributingProjects([]);
-  };
+  },[]);
 
   // --- Handle form submit
   const handleSubmit = async (e) => {
@@ -260,7 +263,7 @@ export default function UserProfile() {
                           {project.prs || 0}
                         </span>
                         <span className="flex items-center gap-1">
-                          <DollarSign size={16} className="text-green-500" />{" "}
+                          <IndianRupee size={16} className="text-green-500" />{" "}
                           {project.bounty || "N/A"}
                         </span>
                         <span className="flex items-center gap-1">

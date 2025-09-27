@@ -1,72 +1,87 @@
 "use client";
-import { useSearchParams } from "next/navigation";
+
 import { useEffect, useState } from "react";
 import { dataByQuery } from "@/firestore/page";
-import { Star, Users, GitPullRequest, Github, ExternalLink, Calendar, Code, Award, School } from "lucide-react";
+import { Star, Users, GitPullRequest, Github, Calendar, Code, Award, School } from "lucide-react";
 import Link from "next/link";
 import CommunityChat from "@/components/CommunityChat";
 import EscrowFormBtn from "@/components/bountyBtn";
 
 export default function ProjectDescriptionPage() {
-  const searchParams = useSearchParams();
-  const title = searchParams.get("title");
+  const [title, setTitle] = useState(null); // guard for query param
   const [projectData, setProjectData] = useState(null);
   const [summary, setSummary] = useState("Loading AI summary...");
   const [chatHistory, setChatHistory] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // ✅ Grab the title from URL safely (browser only)
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      setTitle(params.get("title"));
+    }
+  }, []);
+
+  // Fetch project data from Firestore
   useEffect(() => {
     async function fetchProjectData() {
       if (!title) {
         setLoading(false);
         return;
-      };
-      setLoading(true);
-      const dataQ = await dataByQuery("title", title);
-
-      if (dataQ && dataQ.length > 0) {
-        setProjectData(dataQ[0]);
       }
-      setLoading(false);
+      setLoading(true);
+      try {
+        const dataQ = await dataByQuery("title", title);
+        if (dataQ && dataQ.length > 0) {
+          setProjectData(dataQ[0]);
+        }
+      } catch (err) {
+        console.error("Error fetching project:", err);
+      } finally {
+        setLoading(false);
+      }
     }
     fetchProjectData();
   }, [title]);
 
+  // Fetch AI summary
   useEffect(() => {
     async function fetchSummary() {
       if (!projectData?.githubUrl) return;
-      const encodedUrl = encodeURIComponent(projectData.githubUrl);
-      const res = await fetch(
-        `/api/generateDesc?repoUrl=${encodedUrl}`
-      );
-      const data = await res.json();
-      setSummary(data.summary);
+      try {
+        const encodedUrl = encodeURIComponent(projectData.githubUrl);
+        const res = await fetch(`/api/generateDesc?repoUrl=${encodedUrl}`);
+        const data = await res.json();
+        setSummary(data.summary);
+      } catch (err) {
+        console.error("Error fetching AI summary:", err);
+        setSummary("Failed to load AI summary.");
+      }
     }
     fetchSummary();
   }, [projectData]);
 
   const handleChat = async (query) => {
     if (!projectData?.githubUrl) return;
-    const res = await fetch("/api/ai-chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ repoUrl: projectData.githubUrl, query }),
-    });
-    const data = await res.json();
-    setChatHistory([
-      ...chatHistory,
-      { role: "user", content: query },
-      { role: "ai", content: data.reply },
-    ]);
+    try {
+      const res = await fetch("/api/ai-chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ repoUrl: projectData.githubUrl, query }),
+      });
+      const data = await res.json();
+      setChatHistory([
+        ...chatHistory,
+        { role: "user", content: query },
+        { role: "ai", content: data.reply },
+      ]);
+    } catch (err) {
+      console.error("AI chat error:", err);
+    }
   };
 
-  if (loading) {
-    return <div className="text-center p-10">Loading project details...</div>;
-  }
-
-  if (!projectData) {
-    return <div className="text-center p-10">Project not found.</div>;
-  }
+  if (loading) return <div className="text-center p-10">Loading project details...</div>;
+  if (!projectData) return <div className="text-center p-10">Project not found.</div>;
 
   const { image, description, author, college, year, skills, bounty, stars, contributors, prs, posted, githubUrl } = projectData;
 
@@ -97,6 +112,7 @@ export default function ProjectDescriptionPage() {
             <ChatInput onSend={handleChat} />
           </div>
         </div>
+
         {/* Sidebar */}
         <div className="space-y-6">
           <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
@@ -109,14 +125,13 @@ export default function ProjectDescriptionPage() {
               <div className="flex items-center gap-3"><GitPullRequest className="w-5 h-5 text-zinc-400" /> <span>{prs} open PRs</span></div>
             </div>
             <div className="mt-6 flex flex-col gap-3">
-                <Link href={githubUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 w-full bg-zinc-800 hover:bg-zinc-700 text-white font-semibold px-4 py-2 rounded-lg transition-colors">
-                    <Github size={18} /> View on GitHub
-                </Link>
-                <EscrowFormBtn
-                  // Parse the numeric value from the bounty string (e.g., "₹5000" -> 5000)
-                  inrBounty={bounty ? Number(bounty.replace(/[^0-9.]/g, "")) : 0}
-                  projectTitle={title}
-                />
+              <Link href={githubUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 w-full bg-zinc-800 hover:bg-zinc-700 text-white font-semibold px-4 py-2 rounded-lg transition-colors">
+                <Github size={18} /> View on GitHub
+              </Link>
+              <EscrowFormBtn
+                inrBounty={bounty ? Number(bounty.replace(/[^0-9.]/g, "")) : 0}
+                projectTitle={title}
+              />
             </div>
           </div>
 
