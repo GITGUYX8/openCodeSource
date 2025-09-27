@@ -16,12 +16,12 @@ export default function UserProfile() {
   const db = getFirestore(firebaseApp);
   const { isSignedIn, user: clerkUser, isLoaded } = useUser();
 
-  // --- Profile data state
+  
   const [profileData, setProfileData] = useState({
     fullName: "",
     college: "",
     year: "",
-    skills: "", // make it a string for text input
+    skills: "", 
     github: "",
     linkedin: "",
     degree: "",
@@ -33,22 +33,22 @@ export default function UserProfile() {
   const [yourProjects, setYourProjects] = useState([]);
   const [contributingProjects, setContributingProjects] = useState([]);
 
-  // --- Load/Save form data to/from localStorage
+  
   useEffect(() => {
-    // On component mount, try to load saved form data if a profile isn't already set.
+    
     if (!profile) {
       const savedData = localStorage.getItem("userProfileForm");
       if (savedData) {
         setProfileData(JSON.parse(savedData));
       }
     }
-  }, []); // Empty dependency array ensures this runs only once on mount
+  }, []); 
 
   useEffect(() => {
     localStorage.setItem("userProfileForm", JSON.stringify(profileData));
   }, [profileData]);
 
-  // --- Add profile to Firestore
+  
   const addUserProfile = async () => {
     const userProfile = {
       College: profileData.college,
@@ -70,13 +70,13 @@ export default function UserProfile() {
   };
   const results = [];
 
-  // --- Fetch projects from Firestore
+  
   useEffect(() => {
     const get_data = async () => {
       if (!profile?.fullName) return;
 
       try {
-        // 🔹 Fetch profile-related projects
+      
         
         const collectionRef = collection(firestore, "userProfile");
         const q = query(collectionRef, where("name", "==", profile.fullName));
@@ -89,7 +89,7 @@ export default function UserProfile() {
         
         
 
-        // 🔹 If GitHub is available, fetch projects from entries
+        
         console.log(results[0].github_profile.split("/")    )
         const githubUrl=results[0].github_profile.split("/")[3]
 
@@ -115,7 +115,6 @@ export default function UserProfile() {
     get_data();
   }, [profile]);
 
-  // --- Delete local profile
   const deleteProfile = async () => {
     localStorage.removeItem("userProfile");
     setProfile(null);
@@ -123,7 +122,7 @@ export default function UserProfile() {
     setContributingProjects([]);
   };
 
-  // --- Handle form submit
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formattedProfile = {
@@ -132,7 +131,7 @@ export default function UserProfile() {
     };
     setProfile(formattedProfile);
     await addUserProfile();
-    localStorage.removeItem("userProfileForm"); // Clear saved form data on successful submission
+    localStorage.removeItem("userProfileForm");  
   };
 
   if (!isLoaded) {
@@ -163,7 +162,7 @@ export default function UserProfile() {
 
       <div className="relative z-10">
       {!profile ? (
-        // --- Profile creation form
+        
         <div className="flex items-center justify-center min-h-[80vh]">
           <form
             onSubmit={handleSubmit}
@@ -251,7 +250,7 @@ export default function UserProfile() {
           </form>
         </div>
       ) : (
-        // --- Profile display
+        
         <div className="max-w-6xl mx-auto">
           <div className="bg-black/30 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl shadow-blue-500/10 p-6 md:p-8 mb-8">
             <div className="flex flex-col sm:flex-row items-center gap-6">
@@ -281,7 +280,7 @@ export default function UserProfile() {
             </div>
           </div>
 
-          {/* Tabs */}
+          
           <div className="flex justify-center mb-8">
             <div className="bg-black/30 border border-white/20 rounded-full p-1 flex space-x-1">
               <button
@@ -299,7 +298,7 @@ export default function UserProfile() {
             </div>
           </div>
 
-          {/* Project display */}
+          
           <div className="mt-4">
   {activeTab === "Your projects" ? (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

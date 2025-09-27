@@ -84,14 +84,14 @@ export default function AddProjectForm() {
 
   return (
     <main className="relative min-h-screen bg-grid-small-white/[0.2] bg-neutral-950 flex items-center justify-center p-4 overflow-hidden">
-      {/* Background radial gradient */}
+      
       <div className="absolute pointer-events-none inset-0 flex items-center justify-center bg-neutral-950 [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
 
-      {/* Floating decorative blobs */}
+     
       <div className="absolute -top-40 -left-40 w-[28rem] h-[28rem] bg-blue-600/50 rounded-full filter blur-3xl opacity-40 animate-float"></div>
       <div className="absolute -bottom-40 -right-40 w-[28rem] h-[28rem] bg-purple-600/50 rounded-full filter blur-3xl opacity-40 animate-float2"></div>
 
-      {/* Form container */}
+     
       <div className="relative z-10 w-full max-w-2xl p-8 bg-black/30 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl shadow-blue-500/10">
         <div className="flex items-center justify-center gap-3 mb-8">
           <FaGithub className="w-8 h-8" />
@@ -100,7 +100,7 @@ export default function AddProjectForm() {
         <p className="text-center text-gray-300 mb-8 -mt-4">Showcase your work by linking a GitHub repository. We'll fetch the details for you!</p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* GitHub URL */}
+          
           <div>
             <label className="block text-sm font-medium mb-1">GitHub Repo URL</label>
             <input
@@ -114,7 +114,7 @@ export default function AddProjectForm() {
             />
           </div>
 
-          {/* College & Year */}
+          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-1">College</label>
@@ -139,7 +139,7 @@ export default function AddProjectForm() {
             </div>
           </div>
 
-          {/* Bounty */}
+         
           <div>
             <label className="block text-sm font-medium mb-1">Bounty</label>
             <input
@@ -152,7 +152,7 @@ export default function AddProjectForm() {
             />
           </div>
 
-          {/* Categories Multi-Select */}
+          
           <div>
             <label className="block text-sm font-medium mb-1">Categories</label>
            <Listbox value={selectedCategories} onChange={setSelectedCategories} multiple>
@@ -203,7 +203,7 @@ export default function AddProjectForm() {
 
           </div>
 
-          {/* Submit */}
+          
           <button
             type="submit"
             disabled={loading}

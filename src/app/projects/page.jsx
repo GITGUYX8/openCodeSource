@@ -61,9 +61,9 @@ export default function ProjectsPage() {
         All Projects
       </h1>
 
-      {/* Filter/Search Section */}
+      
       <div className="flex flex-col md:flex-row gap-4 mb-8 items-center justify-center">
-        {/* Search Box */}
+        
         <input
           type="text"
           placeholder="Search projects..."
@@ -72,7 +72,7 @@ export default function ProjectsPage() {
           className="px-4 py-2 rounded-xl bg-white/10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-white/20 transition w-full md:w-1/3"
         />
 
-        {/* Categories Multi-Select */}
+        
         <Listbox value={selectedCategories} onChange={setSelectedCategories} multiple>
           <div className="relative w-full md:w-1/3">
             <Listbox.Button className="w-full flex justify-between items-center px-4 py-2 rounded-xl bg-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-white/20 transition">
@@ -119,7 +119,7 @@ export default function ProjectsPage() {
           </div>
         </Listbox>
 
-        {/* Sort By */}
+        
         <select
           value={sortOption}
           onChange={(e) => setSortOption(e.target.value)}
@@ -130,7 +130,7 @@ export default function ProjectsPage() {
         </select>
       </div>
 
-      {/* Projects Grid */}
+      
       {loading ? (
         <p className="text-center text-white">Loading projects...</p>
       ) : (
