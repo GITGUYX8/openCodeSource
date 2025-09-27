@@ -26,8 +26,7 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-zinc-200/80 bg-white/80 shadow-sm backdrop-blur-lg dark:border-zinc-800/80 dark:bg-zinc-950/80">
       <div className="container mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-         <header className="flex justify-end p-4 bg-gray-900 text-white">
-    </header>
+
         <Link href="/" className="flex items-center gap-2">
           <Code className="h-6 w-6 text-blue-600" />
           <span className="hidden text-lg font-bold text-zinc-900 dark:text-zinc-100 sm:inline-block">

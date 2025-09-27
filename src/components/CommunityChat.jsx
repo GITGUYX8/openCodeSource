@@ -2,13 +2,13 @@
  
  import { useState, useEffect } from "react";
  import { getFirestore, doc, onSnapshot, updateDoc, arrayUnion } from "firebase/firestore";
+ import { useUser } from "@clerk/nextjs";
  import { firebaseApp } from "@/context/firebase";
- import { useFirebase } from "@/context/firebase"; // Assuming you have an auth context
  
  const firestore = getFirestore(firebaseApp);
  
  export default function CommunityChat({ projectId }) {
-   const { user } = useFirebase(); // Get the current logged-in user
+   const { user } = useUser(); // Get the current logged-in user from Clerk
    const [comments, setComments] = useState([]);
    const [newComment, setNewComment] = useState("");
    const [loading, setLoading] = useState(true);
