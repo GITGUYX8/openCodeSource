@@ -1,13 +1,26 @@
 "use client";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { dataByQuery } from "@/firestore/page";
 import { Star, Users, GitPullRequest, Github, ExternalLink, Calendar, Code, Award, School } from "lucide-react";
 import Link from "next/link";
 import CommunityChat from "@/components/CommunityChat";
 import EscrowFormBtn from "@/components/bountyBtn";
 import ReactMarkdown from "react-markdown";
+
+export const dynamic = 'force-dynamic';
+
 export default function ProjectDescriptionPage() {
+  return (
+    // Wrap the component that uses useSearchParams in a Suspense boundary
+    <Suspense fallback={<div className="text-center p-10">Loading page...</div>}>
+      <ProjectContent />
+    </Suspense>
+  );
+}
+
+// This new component contains the original page logic
+function ProjectContent() {
   const searchParams = useSearchParams();
   const title = searchParams.get("title");
   const [projectData, setProjectData] = useState(null);
