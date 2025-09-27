@@ -8,11 +8,13 @@ import {
   where,
   addDoc,
 } from "firebase/firestore";
-import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { FaGithub, FaLinkedin, FaUserCircle, FaStar, FaCodeBranch, FaExclamationCircle, FaProjectDiagram } from "react-icons/fa";
+import { useUser } from "@clerk/nextjs";
 import { firestore, firebaseApp } from "@/context/firebase";
 
 export default function UserProfile() {
   const db = getFirestore(firebaseApp);
+  const { isSignedIn, user: clerkUser, isLoaded } = useUser();
 
   // --- Profile data state
   const [profileData, setProfileData] = useState({
@@ -30,6 +32,21 @@ export default function UserProfile() {
   const [activeTab, setActiveTab] = useState("Your projects");
   const [yourProjects, setYourProjects] = useState([]);
   const [contributingProjects, setContributingProjects] = useState([]);
+
+  // --- Load/Save form data to/from localStorage
+  useEffect(() => {
+    // On component mount, try to load saved form data if a profile isn't already set.
+    if (!profile) {
+      const savedData = localStorage.getItem("userProfileForm");
+      if (savedData) {
+        setProfileData(JSON.parse(savedData));
+      }
+    }
+  }, []); // Empty dependency array ensures this runs only once on mount
+
+  useEffect(() => {
+    localStorage.setItem("userProfileForm", JSON.stringify(profileData));
+  }, [profileData]);
 
   // --- Add profile to Firestore
   const addUserProfile = async () => {
@@ -115,158 +132,171 @@ export default function UserProfile() {
     };
     setProfile(formattedProfile);
     await addUserProfile();
+    localStorage.removeItem("userProfileForm"); // Clear saved form data on successful submission
   };
 
+  if (!isLoaded) {
+    return (
+      <main className="relative min-h-screen bg-neutral-950 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
+      </main>
+    );
+  }
+
+  if (!isSignedIn) {
+    return (
+      <main className="relative min-h-screen bg-grid-small-white/[0.2] bg-neutral-950 flex items-center justify-center p-4 overflow-hidden">
+        <div className="absolute pointer-events-none inset-0 flex items-center justify-center bg-neutral-950 [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
+        <div className="relative z-10 text-center">
+            <h2 className="text-2xl font-bold">Please Sign In</h2>
+            <p className="text-gray-400 mt-2">You need to be signed in to view and create your profile.</p>
+        </div>
+      </main>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-6">
+    <main className="relative min-h-screen bg-grid-small-white/[0.2] bg-neutral-950 p-4 md:p-8 overflow-y-auto">
+      <div className="absolute pointer-events-none inset-0 flex items-center justify-center bg-neutral-950 [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
+      <div className="absolute -top-40 -left-40 w-[28rem] h-[28rem] bg-blue-600/50 rounded-full filter blur-3xl opacity-40 animate-float"></div>
+      <div className="absolute -bottom-40 -right-40 w-[28rem] h-[28rem] bg-purple-600/50 rounded-full filter blur-3xl opacity-40 animate-float2"></div>
+
+      <div className="relative z-10">
       {!profile ? (
         // --- Profile creation form
-        <form
-          onSubmit={handleSubmit}
-          className="max-w-lg mx-auto bg-gray-800 p-6 rounded-lg shadow-md"
-        >
-          <h2 className="text-2xl font-bold mb-4 text-center">
-            Create Your Profile
-          </h2>
-
-          <input
-            className="w-full p-2 border border-gray-600 rounded mb-4 bg-gray-700 text-white"
-            type="text"
-            placeholder="Full Name"
-            value={profileData.fullName}
-            onChange={(e) =>
-              setProfileData({ ...profileData, fullName: e.target.value })
-            }
-            required
-          />
-
-          <input
-            className="w-full p-2 border border-gray-600 rounded mb-4 bg-gray-700 text-white"
-            type="text"
-            placeholder="College"
-            value={profileData.college}
-            onChange={(e) =>
-              setProfileData({ ...profileData, college: e.target.value })
-            }
-            required
-          />
-
-          <input
-            className="w-full p-2 border border-gray-600 rounded mb-4 bg-gray-700 text-white"
-            type="text"
-            placeholder="Year"
-            value={profileData.year}
-            onChange={(e) =>
-              setProfileData({ ...profileData, year: e.target.value })
-            }
-            required
-          />
-
-          <input
-            className="w-full p-2 border border-gray-600 rounded mb-4 bg-gray-700 text-white"
-            type="text"
-            placeholder="Skills (comma separated)"
-            value={profileData.skills}
-            onChange={(e) =>
-              setProfileData({ ...profileData, skills: e.target.value })
-            }
-            required
-          />
-
-          <input
-            className="w-full p-2 border border-gray-600 rounded mb-4 bg-gray-700 text-white"
-            type="url"
-            placeholder="GitHub Profile Link"
-            value={profileData.github}
-            onChange={(e) =>
-              setProfileData({ ...profileData, github: e.target.value })
-            }
-            required
-          />
-
-          <input
-            className="w-full p-2 border border-gray-600 rounded mb-4 bg-gray-700 text-white"
-            type="url"
-            placeholder="LinkedIn Profile Link"
-            value={profileData.linkedin}
-            onChange={(e) =>
-              setProfileData({ ...profileData, linkedin: e.target.value })
-            
-            }
-            required
-          />
-
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-500 transition duration-200"
+        <div className="flex items-center justify-center min-h-[80vh]">
+          <form
+            onSubmit={handleSubmit}
+            className="w-full max-w-2xl p-8 bg-black/30 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl shadow-blue-500/10 space-y-6"
           >
-            Save Profile
-          </button>
-        </form>
+            <div className="text-center">
+              <h2 className="text-3xl font-bold tracking-tight">Create Your Profile</h2>
+              <p className="text-gray-300 mt-2">Let the community know who you are.</p>
+            </div>
+
+            <input
+              className="w-full px-4 py-2 rounded-xl bg-white/10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-white/20 transition"
+              type="text"
+              placeholder="Full Name"
+              value={profileData.fullName}
+              onChange={(e) =>
+                setProfileData({ ...profileData, fullName: e.target.value })
+              }
+              required
+            />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <input
+                className="w-full px-4 py-2 rounded-xl bg-white/10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-white/20 transition"
+                type="text"
+                placeholder="College"
+                value={profileData.college}
+                onChange={(e) =>
+                  setProfileData({ ...profileData, college: e.target.value })
+                }
+                required
+              />
+              <input
+                className="w-full px-4 py-2 rounded-xl bg-white/10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-white/20 transition"
+                type="text"
+                placeholder="Year of Study"
+                value={profileData.year}
+                onChange={(e) =>
+                  setProfileData({ ...profileData, year: e.target.value })
+                }
+                required
+              />
+            </div>
+
+            <input
+              className="w-full px-4 py-2 rounded-xl bg-white/10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-white/20 transition"
+              type="text"
+              placeholder="Skills (e.g., React, Python, Figma)"
+              value={profileData.skills}
+              onChange={(e) =>
+                setProfileData({ ...profileData, skills: e.target.value })
+              }
+              required
+            />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <input
+                className="w-full px-4 py-2 rounded-xl bg-white/10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-white/20 transition"
+                type="url"
+                placeholder="GitHub Profile URL"
+                value={profileData.github}
+                onChange={(e) =>
+                  setProfileData({ ...profileData, github: e.target.value })
+                }
+                required
+              />
+              <input
+                className="w-full px-4 py-2 rounded-xl bg-white/10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-white/20 transition"
+                type="url"
+                placeholder="LinkedIn Profile URL"
+                value={profileData.linkedin}
+                onChange={(e) =>
+                  setProfileData({ ...profileData, linkedin: e.target.value })
+                }
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-500 transition-all duration-300 rounded-xl font-semibold shadow-lg shadow-blue-600/30 hover:shadow-blue-500/50"
+            >
+              Save Profile
+            </button>
+          </form>
+        </div>
       ) : (
         // --- Profile display
-        <div className="max-w-5xl mx-auto bg-gray-800 p-6 rounded-lg shadow-md">
-          <h1 className="text-3xl font-bold mb-2">{profile.fullName}</h1>
-          <p className="text-gray-400 mb-4">
-            {profile.college} · Year {profile.year}
-          </p>
-
-          <div className="mb-4">
-            {profile.skills.map((skill, i) => (
-              <span
-                key={i}
-                className="inline-block bg-blue-900 text-blue-300 text-sm px-2 py-1 rounded-full mr-2 mb-2"
-              >
-                {skill}
-              </span>
-            ))}
-          </div>
-
-          <div className="flex space-x-4 mb-6">
-            {profile.github && (
-              <a
-                href={profile.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-300 hover:text-white"
-              >
-                <FaGithub size={30} />
-              </a>
-            )}
-            {profile.linkedin && (
-              <a
-                href={profile.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-400 hover:text-blue-200"
-              >
-                <FaLinkedin size={30} />
-              </a>
-            )}
+        <div className="max-w-6xl mx-auto">
+          <div className="bg-black/30 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl shadow-blue-500/10 p-6 md:p-8 mb-8">
+            <div className="flex flex-col sm:flex-row items-center gap-6">
+              <FaUserCircle className="w-24 h-24 text-gray-500" />
+              <div className="text-center sm:text-left">
+                <h1 className="text-4xl font-bold tracking-tight">{profile.fullName}</h1>
+                <p className="text-gray-300 mt-1">
+                  {profile.college} · Year {profile.year}
+                </p>
+                <div className="flex justify-center sm:justify-start space-x-4 mt-4">
+                  {profile.github && (
+                    <a href={profile.github} target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors"><FaGithub size={24} /></a>
+                  )}
+                  {profile.linkedin && (
+                    <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white transition-colors"><FaLinkedin size={24} /></a>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="mt-6 border-t border-white/10 pt-6">
+              <h3 className="font-semibold mb-3">Skills</h3>
+              <div className="flex flex-wrap gap-2">
+                {profile.skills.map((skill, i) => (
+                  <span key={i} className="bg-white/10 text-neutral-300 text-xs font-medium px-3 py-1 rounded-full border border-white/10">{skill}</span>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* Tabs */}
-          <div className="flex border-b border-gray-600 mb-4">
-            <button
-              className={`px-4 py-2 ${
-                activeTab === "Your projects"
-                  ? "border-b-2 border-blue-500 text-blue-400"
-                  : "text-gray-400 hover:text-white"
-              }`}
-              onClick={() => setActiveTab("Your projects")}
-            >
-              Your projects
-            </button>
-            <button
-              className={`px-4 py-2 ${
-                activeTab === "Contributing projects"
-                  ? "border-b-2 border-blue-500 text-blue-400"
-                  : "text-gray-400 hover:text-white"
-              }`}
-              onClick={() => setActiveTab("Contributing projects")}
-            >
-              Contributing projects
-            </button>
+          <div className="flex justify-center mb-8">
+            <div className="bg-black/30 border border-white/20 rounded-full p-1 flex space-x-1">
+              <button
+                className={`px-4 py-1.5 text-sm font-medium rounded-full transition-colors ${activeTab === "Your projects" ? "bg-blue-600 text-white" : "text-gray-300 hover:bg-white/10"}`}
+                onClick={() => setActiveTab("Your projects")}
+              >
+                Your Projects
+              </button>
+              <button
+                className={`px-4 py-1.5 text-sm font-medium rounded-full transition-colors ${activeTab === "Contributing projects" ? "bg-blue-600 text-white" : "text-gray-300 hover:bg-white/10"}`}
+                onClick={() => setActiveTab("Contributing projects")}
+              >
+                Contributions
+              </button>
+            </div>
           </div>
 
           {/* Project display */}
@@ -304,19 +334,19 @@ export default function UserProfile() {
             <div className="flex flex-wrap gap-2 mb-3">
               {project.skills?.map((skill, i) => (
                 <span
-                  key={i}
-                  className="px-2 py-1 bg-blue-900 text-blue-300 rounded-full text-xs"
+                  key={i} 
+                  className="bg-white/10 text-neutral-300 text-xs font-medium px-2.5 py-1 rounded-full border border-white/10"
                 >
                   {skill}
                 </span>
               ))}
             </div>
 
-            <div className="flex justify-between text-gray-400 text-sm mb-3">
-              <span>⭐ {project.stars || 0}</span>
-              <span>🍴 {project.forks || 0}</span>
-              <span>🛠 {project.prs || 0}</span>
-              <span>🐞 {project.open_issues || 0}</span>
+            <div className="flex items-center justify-between text-gray-400 text-sm mb-4 border-t border-white/10 pt-3">
+              <span className="flex items-center gap-1"><FaStar /> {project.stars || 0}</span>
+              <span className="flex items-center gap-1"><FaCodeBranch /> {project.forks || 0}</span>
+              <span className="flex items-center gap-1"><FaProjectDiagram /> {project.prs || 0}</span>
+              <span className="flex items-center gap-1"><FaExclamationCircle /> {project.open_issues || 0}</span>
             </div>
 
             {project.githubUrl && (
@@ -324,7 +354,7 @@ export default function UserProfile() {
                 href={project.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-400 hover:underline"
+                className="text-blue-400 hover:underline text-sm"
               >
                 View on GitHub
               </a>
@@ -373,19 +403,19 @@ export default function UserProfile() {
             <div className="flex flex-wrap gap-2 mb-3">
               {project.skills?.map((skill, i) => (
                 <span
-                  key={i}
-                  className="px-2 py-1 bg-blue-900 text-blue-300 rounded-full text-xs"
+                  key={i} 
+                  className="bg-white/10 text-neutral-300 text-xs font-medium px-2.5 py-1 rounded-full border border-white/10"
                 >
                   {skill}
                 </span>
               ))}
             </div>
 
-            <div className="flex justify-between text-gray-400 text-sm mb-3">
-              <span>⭐ {project.stars || 0}</span>
-              <span>🍴 {project.forks || 0}</span>
-              <span>🛠 {project.prs || 0}</span>
-              <span>🐞 {project.open_issues || 0}</span>
+            <div className="flex items-center justify-between text-gray-400 text-sm mb-4 border-t border-white/10 pt-3">
+              <span className="flex items-center gap-1"><FaStar /> {project.stars || 0}</span>
+              <span className="flex items-center gap-1"><FaCodeBranch /> {project.forks || 0}</span>
+              <span className="flex items-center gap-1"><FaProjectDiagram /> {project.prs || 0}</span>
+              <span className="flex items-center gap-1"><FaExclamationCircle /> {project.open_issues || 0}</span>
             </div>
 
             {project.githubUrl && (
@@ -393,7 +423,7 @@ export default function UserProfile() {
                 href={project.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-400 hover:underline"
+                className="text-blue-400 hover:underline text-sm"
               >
                 View on GitHub
               </a>
@@ -414,13 +444,14 @@ export default function UserProfile() {
 
 
           <button
-            onClick={deleteProfile}
-            className="mt-4 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded"
+            onClick={deleteProfile} 
+            className="mt-8 bg-red-600/50 hover:bg-red-600/80 text-white px-4 py-2 rounded-xl transition-colors text-sm"
           >
             Delete Profile
           </button>
         </div>
       )}
-    </div>
+      </div>
+    </main>
   );
 }

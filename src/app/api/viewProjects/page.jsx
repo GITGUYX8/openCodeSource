@@ -56,20 +56,29 @@ export default function ProjectsPage() {
     });
 
   return (
-    <main className="container mx-auto px-4 py-12 relative">
-      <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-center mb-12">
-        All Projects
-      </h1>
+    <main className="relative min-h-screen bg-grid-small-white/[0.2] bg-neutral-950 overflow-hidden">
+      {/* Background radial gradient */}
+      <div className="absolute pointer-events-none inset-0 flex items-center justify-center bg-neutral-950 [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
+
+      {/* Floating decorative blobs */}
+      <div className="absolute -top-40 -left-40 w-[28rem] h-[28rem] bg-blue-600/50 rounded-full filter blur-3xl opacity-40 animate-float"></div>
+      <div className="absolute -bottom-40 -right-40 w-[28rem] h-[28rem] bg-purple-600/50 rounded-full filter blur-3xl opacity-40 animate-float2"></div>
+
+      <div className="container mx-auto px-4 py-12 relative z-10">
+        <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-center mb-4">
+          Explore Projects
+        </h1>
+        <p className="text-center text-gray-300 mb-12">Find, filter, and sort through community-submitted open-source projects.</p>
 
       {/* Filter/Search Section */}
-      <div className="flex flex-col md:flex-row gap-4 mb-8 items-center justify-center">
+        <div className="relative z-10 w-full max-w-4xl mx-auto p-6 mb-12 bg-black/30 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl shadow-blue-500/10 flex flex-col md:flex-row gap-4 items-center justify-center">
         {/* Search Box */}
         <input
           type="text"
           placeholder="Search projects..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="px-4 py-2 rounded-xl bg-white/10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-white/20 transition w-full md:w-1/3"
+          className="w-full px-4 py-2 rounded-xl bg-white/10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-white/20 transition md:w-1/3"
         />
 
         {/* Categories Multi-Select */}
@@ -88,13 +97,12 @@ export default function ProjectsPage() {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options className="absolute mt-2 w-full bg-neutral-900 border border-white/10 rounded-xl shadow-lg z-20 max-h-60 overflow-auto">
+              <Listbox.Options className="absolute mt-1 w-full bg-neutral-800 border border-white/10 rounded-xl shadow-lg z-20 max-h-60 overflow-auto focus:outline-none">
                 {techCategories.map((category) => (
                   <Listbox.Option
                     key={category}
                     value={category}
-                    className={({ active }) =>
-                      `cursor-pointer select-none px-4 py-2 flex items-center gap-2 ${
+                    className={({ active }) => `cursor-pointer select-none relative px-4 py-2 flex items-center gap-3 ${
                         active ? "bg-blue-600 text-white" : "text-gray-300"
                       }`
                     }
@@ -105,7 +113,7 @@ export default function ProjectsPage() {
                           type="checkbox"
                           checked={selected}
                           readOnly
-                          className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                          className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                         />
                         <span className={selected ? "font-semibold" : "font-normal"}>
                           {category}
@@ -123,7 +131,7 @@ export default function ProjectsPage() {
         <select
           value={sortOption}
           onChange={(e) => setSortOption(e.target.value)}
-          className="px-4 py-2 rounded-xl bg-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-white/20 transition w-full md:w-1/4"
+          className="w-full px-4 py-2 rounded-xl bg-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-white/20 transition md:w-auto"
         >
           <option value="date">Sort by Date</option>
           <option value="bounty">Sort by Bounty</option>
@@ -132,28 +140,33 @@ export default function ProjectsPage() {
 
       {/* Projects Grid */}
       {loading ? (
-        <p className="text-center text-white">Loading projects...</p>
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
+          </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProjects.map((project) => (
-            <ProjectCard
-              key={project.entry}
-              image={project.image}
-              title={project.title}
-              description={project.description}
-              author={project.author}
-              college={project.college}
-              year={project.year}
-              skills={project.skills}
-              bounty={project.bounty}
-              stars={project.stars}
-              contributors={project.contributors}
-              prs={project.prs}
-              posted={project.posted}
-            />
-          ))}
-        </div>
+          filteredProjects.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredProjects.map((project) => (
+                <ProjectCard
+                  key={project.entry}
+                  image={project.image}
+                  title={project.title}
+                  description={project.description}
+                  author={project.author}
+                  college={project.college}
+                  year={project.year}
+                  skills={project.skills}
+                  bounty={project.bounty}
+                  stars={project.stars}
+                  contributors={project.contributors}
+                  prs={project.prs}
+                  posted={project.posted}
+                />
+              ))}
+            </div>
+          ) : (<p className="text-center text-gray-400 text-lg">No projects found matching your criteria.</p>)
       )}
+      </div>
     </main>
   );
 } 

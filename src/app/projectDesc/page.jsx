@@ -6,7 +6,7 @@ import { Star, Users, GitPullRequest, Github, ExternalLink, Calendar, Code, Awar
 import Link from "next/link";
 import CommunityChat from "@/components/CommunityChat";
 import EscrowFormBtn from "@/components/bountyBtn";
-
+import ReactMarkdown from "react-markdown";
 export default function ProjectDescriptionPage() {
   const searchParams = useSearchParams();
   const title = searchParams.get("title");
@@ -80,11 +80,14 @@ export default function ProjectDescriptionPage() {
             <h1 className="text-3xl md:text-4xl font-bold mb-2">{title}</h1>
             <p className="text-zinc-400 mb-6">{description}</p>
 
-            <h2 className="text-xl font-semibold mb-3 border-t border-zinc-800 pt-4">AI-Generated Summary</h2>
-            <p className="text-zinc-300 prose prose-invert max-w-none">{summary}</p>
+            <h2 className="text-xl font-semibold mb-3 border-t border-zinc-800 pt-4">Know More by AI :</h2>
+            <div className="prose prose-invert max-w-none text-zinc-300">
+            <ReactMarkdown >
+              {summary}
+            </ReactMarkdown>
+            </div>
           </div>
 
-          {/* AI Chat */}
           <div className="border rounded-xl p-4 bg-zinc-900 border-zinc-800">
             <h2 className="text-lg font-semibold mb-3">Ask AI about this project</h2>
             <div className="h-64 overflow-y-auto mb-3 space-y-2 p-2 bg-zinc-950 rounded-lg">
@@ -97,6 +100,7 @@ export default function ProjectDescriptionPage() {
             <ChatInput onSend={handleChat} />
           </div>
         </div>
+          {/* AI Chat */}
         {/* Sidebar */}
         <div className="space-y-6">
           <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">

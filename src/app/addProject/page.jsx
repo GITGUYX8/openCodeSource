@@ -4,6 +4,7 @@ import { useState, Fragment } from "react";
 import { addProject } from "@/lib/projects";
 import { getRepoData } from "@/github/github";
 import { Listbox, Transition } from "@headlessui/react";
+import { FaGithub } from "react-icons/fa";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 
 const techCategories = [
@@ -82,16 +83,23 @@ export default function AddProjectForm() {
   };
 
   return (
-    <main className="relative min-h-screen bg-neutral-950 flex items-center justify-center overflow-hidden">
-      {/* Floating blue blobs */}
-      <div className="absolute -top-32 -left-32 w-96 h-96 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float"></div>
-      <div className="absolute top-1/2 -right-40 w-[28rem] h-[28rem] bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float2"></div>
+    <main className="relative min-h-screen bg-grid-small-white/[0.2] bg-neutral-950 flex items-center justify-center p-4 overflow-hidden">
+      {/* Background radial gradient */}
+      <div className="absolute pointer-events-none inset-0 flex items-center justify-center bg-neutral-950 [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
+
+      {/* Floating decorative blobs */}
+      <div className="absolute -top-40 -left-40 w-[28rem] h-[28rem] bg-blue-600/50 rounded-full filter blur-3xl opacity-40 animate-float"></div>
+      <div className="absolute -bottom-40 -right-40 w-[28rem] h-[28rem] bg-purple-600/50 rounded-full filter blur-3xl opacity-40 animate-float2"></div>
 
       {/* Form container */}
-      <div className="relative z-10 w-full max-w-xl p-8 bg-white/10 backdrop-blur-lg border border-white/10 rounded-3xl shadow-lg">
-        <h2 className="text-3xl font-bold mb-6 text-center">Add Project from GitHub</h2>
+      <div className="relative z-10 w-full max-w-2xl p-8 bg-black/30 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl shadow-blue-500/10">
+        <div className="flex items-center justify-center gap-3 mb-8">
+          <FaGithub className="w-8 h-8" />
+          <h2 className="text-3xl font-bold text-center tracking-tight">Add Project from GitHub</h2>
+        </div>
+        <p className="text-center text-gray-300 mb-8 -mt-4">Showcase your work by linking a GitHub repository. We'll fetch the details for you!</p>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* GitHub URL */}
           <div>
             <label className="block text-sm font-medium mb-1">GitHub Repo URL</label>
@@ -101,33 +109,34 @@ export default function AddProjectForm() {
               value={form.githubUrl}
               onChange={handleChange}
               placeholder="https://github.com/owner/repo"
-              required
+              required  
               className="w-full px-4 py-2 rounded-xl bg-white/10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-white/20 transition"
             />
           </div>
 
-          {/* College */}
-          <div>
-            <label className="block text-sm font-medium mb-1">College</label>
-            <input
-              type="text"
-              name="college"
-              value={form.college}
-              onChange={handleChange}
-              className="w-full px-4 py-2 rounded-xl bg-white/10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-white/20 transition"
-            />
-          </div>
+          {/* College & Year */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">College</label>
+              <input
+                type="text"
+                name="college"
+                value={form.college}
+                onChange={handleChange} 
+                className="w-full px-4 py-2 rounded-xl bg-white/10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-white/20 transition"
+              />
+            </div>
 
-          {/* Year */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Year</label>
-            <input
-              type="text"
-              name="year"
-              value={form.year}
-              onChange={handleChange}
-              className="w-full px-4 py-2 rounded-xl bg-white/10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-white/20 transition"
-            />
+            <div>
+              <label className="block text-sm font-medium mb-1">Year</label>
+              <input
+                type="text"
+                name="year"
+                value={form.year}
+                onChange={handleChange} 
+                className="w-full px-4 py-2 rounded-xl bg-white/10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-white/20 transition"
+              />
+            </div>
           </div>
 
           {/* Bounty */}
@@ -137,7 +146,7 @@ export default function AddProjectForm() {
               type="text"
               name="bounty"
               value={form.bounty}
-              onChange={handleChange}
+              onChange={handleChange} 
               placeholder="₹1000"
               className="w-full px-4 py-2 rounded-xl bg-white/10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-white/20 transition"
             />
@@ -147,7 +156,7 @@ export default function AddProjectForm() {
           <div>
             <label className="block text-sm font-medium mb-1">Categories</label>
            <Listbox value={selectedCategories} onChange={setSelectedCategories} multiple>
-  <div className="relative">
+  <div className="relative mt-1">
     <Listbox.Button className="w-full flex justify-between items-center px-4 py-2 rounded-xl bg-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-white/20 transition">
       {selectedCategories.length > 0
         ? selectedCategories.join(", ")
@@ -161,13 +170,13 @@ export default function AddProjectForm() {
       leaveFrom="opacity-100"
       leaveTo="opacity-0"
     >
-      <Listbox.Options className="absolute mt-2 w-full bg-neutral-900 border border-white/10 rounded-xl shadow-lg z-20 max-h-60 overflow-auto">
+      <Listbox.Options className="absolute mt-1 w-full bg-neutral-800 border border-white/10 rounded-xl shadow-lg z-20 max-h-60 overflow-auto focus:outline-none">
         {techCategories.map((category) => (
           <Listbox.Option
             key={category}
             value={category}
             className={({ active }) =>
-              `cursor-pointer select-none px-4 py-2 flex items-center gap-2 ${
+              `cursor-pointer select-none relative px-4 py-2 flex items-center gap-3 ${
                 active ? "bg-blue-600 text-white" : "text-gray-300"
               }`
             }
@@ -178,7 +187,7 @@ export default function AddProjectForm() {
                   type="checkbox"
                   checked={selected}
                   readOnly
-                  className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                  className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                 />
                 <span className={selected ? "font-semibold" : "font-normal"}>
                   {category}
@@ -198,7 +207,7 @@ export default function AddProjectForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-500 transition rounded-xl font-semibold"
+            className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-500 transition-all duration-300 rounded-xl font-semibold shadow-lg shadow-blue-600/30 hover:shadow-blue-500/50 disabled:bg-gray-600 disabled:shadow-none disabled:cursor-not-allowed"
           >
             {loading ? "Submitting..." : "Submit"}
           </button>
