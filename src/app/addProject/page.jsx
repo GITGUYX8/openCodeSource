@@ -69,7 +69,7 @@ export default function AddProjectForm() {
       };
 
       await addProject(projectData);
-      alert("Project added successfully ✅");
+      alert("Project added successfully ");
 
       setForm({ githubUrl: "", college: "", year: "", bounty: "" });
       setSelectedCategories([]);

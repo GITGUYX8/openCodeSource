@@ -29,16 +29,16 @@ export const signinGoogle = async () => {
   }
 };
 
-export const signinUser = (email, password) =>  {
-signInWithEmailAndPassword(firebaseAuth, email, password)
-  .then((userCredential) => {
-    // Signed in // ...
-    console.log(userCredential)
+// export const signinUser = (email, password) =>  {
+// signInWithEmailAndPassword(firebaseAuth, email, password)
+//   .then((userCredential) => {
+//     // Signed in // ...
+//     console.log(userCredential)
 
-  })
-  .catch((error) => {
-    const errorHead = error.code;
-    const errorMessage = error.message;
-    console.log(errorHead + ": " + errorMessage)
-  });
-}
+//   })
+//   .catch((error) => {
+//     const errorHead = error.code;
+//     const errorMessage = error.message;
+//     console.log(errorHead + ": " + errorMessage)
+//   });
+// }

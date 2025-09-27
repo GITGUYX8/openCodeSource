@@ -4,8 +4,8 @@ import { useFirebase } from "@/context/firebase";
 import { firestore } from "@/context/firebase";
 import { dataByQuery } from "@/firestore/page";
 export default function EscrowFormBtn({ inrBounty, projectTitle }) {
-  const { user } = useFirebase();
-  const [yourProjects, setYourProjects] = useState([]);
+  // const { user } = useFirebase();
+  // const [yourProjects, setYourProjects] = useState([]);
   
   // Conversion logic
   const usdAmount = Math.round(inrBounty / 83);

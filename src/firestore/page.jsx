@@ -47,7 +47,6 @@ export const dataByQuery = async (queryTitle, queryEntry) => {
     // This might be a placeholder. I'll leave it as is.
     const collectionRef = collection(firestore, "entries");
     const q = query(collectionRef, where(queryTitle, "==", queryEntry));
-    // const q = query(collectionRef, where("author", "==", true ));
     const querySnapshot = await getDocs(q);
     const results = [];
     querySnapshot.forEach(doc => results.push({ id: doc.id, ...doc.data() }));
